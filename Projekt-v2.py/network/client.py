@@ -1,13 +1,8 @@
 import socket
 import json
-from network.config import load_client_config
-
 
 class NetworkClient:
     def __init__(self, host: str, port: int, timeout: float = 5.0, retries: int = 3):
-        """
-        Inicjalizuje klienta sieciowego.
-        """
         self.host = host
         self.port = port
         self.timeout = timeout
@@ -15,18 +10,12 @@ class NetworkClient:
         self.sock = None
 
     def connect(self) -> None:
-        """
-        Nawiązuje połączenie z serwerem.
-        """
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(self.timeout)
         self.sock.connect((self.host, self.port))
         print(f"[INFO] Połączono z {self.host}:{self.port}")
 
     def send(self, data: dict) -> bool:
-        """
-        Wysyła dane w formacie JSON i czeka na potwierdzenie ACK.
-        """
         payload = self._serialize(data)
         attempts = 0
 
@@ -47,21 +36,12 @@ class NetworkClient:
         return False
 
     def close(self) -> None:
-        """
-        Zamyka połączenie.
-        """
         if self.sock:
             self.sock.close()
             print("[INFO] Połączenie zamknięte.")
 
     def _serialize(self, data: dict) -> bytes:
-        """
-        Serializuje słownik do formatu JSON i koduje do bajtów.
-        """
         return json.dumps(data).encode('utf-8')
 
     def _deserialize(self, raw: bytes) -> dict:
-        """
-        Deserializuje bajty do słownika JSON.
-        """
         return json.loads(raw.decode('utf-8'))

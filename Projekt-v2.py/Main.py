@@ -8,11 +8,9 @@ from network.config import load_client_config
 
 
 def main():
-    # Inicjalizacja loggera
     logger = Logger("config.json")
     logger.start()
 
-    # Inicjalizacja czujników
     temp_sensor = TemperatureSensor(1, "Temp Room", "°C", -20, 50)
     humidity_sensor = HumiditySensor(2, "Humidity Room", "%", 0, 100)
     pressure_sensor = PressureSensor(3, "Pressure Outside", "hPa", 950, 1050)
@@ -20,10 +18,11 @@ def main():
 
     sensors = [temp_sensor, humidity_sensor, pressure_sensor, light_sensor]
 
-    # Wczytanie konfiguracji klienta
+    for sensor in sensors:
+        sensor.register_callback(logger.log_reading)
+
     client_config = load_client_config()
 
-    # Dla każdego sensora – nowa sesja połączenia!
     for sensor in sensors:
         value = sensor.read_value()
         print(f"[LOCAL] {sensor.name}: {value} {sensor.unit}")
@@ -35,7 +34,6 @@ def main():
             "unit": sensor.unit
         }
 
-        # 🔥 Nowe połączenie dla każdego odczytu!
         network_client = NetworkClient(
             host=client_config['host'],
             port=client_config['port'],
@@ -49,7 +47,6 @@ def main():
         if not success:
             print(f"[ERROR] Nie udało się wysłać danych: {data}")
 
-    # Zakończenie loggera
     logger.stop()
 
 

@@ -6,15 +6,9 @@ import yaml
 
 class NetworkServer:
     def __init__(self, port: int):
-        """
-        Inicjalizuje serwer TCP na wskazanym porcie.
-        """
         self.port = port
 
     def start(self) -> None:
-        """
-        Uruchamia serwer i obsługuje połączenia klientów.
-        """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(('', self.port))
             s.listen()
@@ -26,9 +20,6 @@ class NetworkServer:
                 self._handle_client(client_sock)
 
     def _handle_client(self, client_socket) -> None:
-        """
-        Odbiera dane, wysyła ACK i wypisuje je na konsolę.
-        """
         with client_socket:
             try:
                 raw = b''
@@ -54,7 +45,6 @@ class NetworkServer:
 
 
 if __name__ == "__main__":
-    # Odczyt portu z config.yaml
     with open("config.yaml", 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     port = config['server']['port']

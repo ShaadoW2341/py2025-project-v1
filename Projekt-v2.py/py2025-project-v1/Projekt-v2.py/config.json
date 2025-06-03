@@ -1,9 +1,0 @@
-{
-  "log_dir": "./logs",
-  "filename_pattern": "sensors_%Y%m%d.csv",
-  "buffer_size": 2,
-  "rotate_every_hours": 24,
-  "max_size_mb": 1,
-  "rotate_after_lines": 1000,
-  "retention_days": 7
-}
